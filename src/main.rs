@@ -5,7 +5,7 @@ use std::path::Path;
 use nix::libc;
 use nix::sys::{stat, stat::Mode, stat::SFlag};
 
-use chrono::{NaiveDateTime, DateTime, Utc};
+use chrono::{DateTime, NaiveDateTime, Utc};
 
 fn main() {
     let prog_name = args().nth(0).unwrap();
@@ -40,10 +40,19 @@ fn main() {
                 s.st_gid,
                 group_name(s.st_gid),
             );
-            
-            println!("Access: {}", timestamp_to_str(s.st_atime, s.st_atime_nsec as u32));
-            println!("Modify: {}", timestamp_to_str(s.st_mtime, s.st_mtime_nsec as u32));
-            println!("Change: {}", timestamp_to_str(s.st_ctime, s.st_ctime_nsec as u32));
+
+            println!(
+                "Access: {}",
+                timestamp_to_str(s.st_atime, s.st_atime_nsec as u32)
+            );
+            println!(
+                "Modify: {}",
+                timestamp_to_str(s.st_mtime, s.st_mtime_nsec as u32)
+            );
+            println!(
+                "Change: {}",
+                timestamp_to_str(s.st_ctime, s.st_ctime_nsec as u32)
+            );
             println!(" Birth: -");
         })
     }
@@ -126,7 +135,7 @@ fn user_name(uid: u32) -> &'static str {
     }
 }
 
-fn group_name(gid: u32) -> &'static str{
+fn group_name(gid: u32) -> &'static str {
     unsafe {
         let gr = libc::getgrgid(gid).as_ref().unwrap();
         let name = CStr::from_ptr(gr.gr_name).to_str().unwrap();
